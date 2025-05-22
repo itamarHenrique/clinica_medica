@@ -3,12 +3,14 @@
 namespace App\Service;
 
 use App\Entity\Paciente;
+use App\Repository\PacienteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PacienteService
 {
 
-    public function __construct(private EntityManagerInterface $entityManagerInterface)
+    public function __construct(private EntityManagerInterface $entityManagerInterface, private PacienteRepository $pacienteRepository)
     {
 
     }
@@ -28,6 +30,18 @@ class PacienteService
 
         $this->entityManagerInterface->persist($paciente);
         $this->entityManagerInterface->flush();
+
+        return $paciente;
+
+    }
+
+    public function buscarPaciente(int $id): Paciente
+    {
+        $paciente = $this->pacienteRepository->find($id);
+
+        if(!$paciente){
+            throw new NotFoundHttpException("Paciente com o ID $id não encontrado.");
+        }
 
         return $paciente;
 

@@ -28,4 +28,12 @@ class PacienteController extends AbstractController
 
         return new JsonResponse(['id' => $paciente->getId()], 201);
     }
+
+    #[Route('/api/pacientes/{id}', methods:['GET'])]
+    public function getPacienteById(int $id)
+    {
+        $paciente = $this->service->buscarPaciente($id);
+
+        return new JsonResponse(['id' => $paciente->getId(), 'nome' => $paciente->getNome(), 'cpf' => $paciente->getCpf(), 'telefone' => $paciente->getTelefone(), 'data-de-nascimento' => $paciente->getDataNascimento()->format('d/m/Y')]);
+    }
 }
