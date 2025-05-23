@@ -44,7 +44,7 @@ class PacienteController extends AbstractController
         $paciente = $this->service->excluirPaciente($id);
 
         if($paciente){
-            return new JsonResponse( ['mensagem' => "Paciente excluido com sucesso."], 200);
+            return new JsonResponse( ['mensagem' => "Paciente {$paciente->getNome()}excluido com sucesso."], 200);
         }
     }
 }
