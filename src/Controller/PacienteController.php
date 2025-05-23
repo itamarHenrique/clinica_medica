@@ -36,4 +36,15 @@ class PacienteController extends AbstractController
 
         return new JsonResponse(['id' => $paciente->getId(), 'nome' => $paciente->getNome(), 'cpf' => $paciente->getCpf(), 'telefone' => $paciente->getTelefone(), 'data-de-nascimento' => $paciente->getDataNascimento()->format('d/m/Y')]);
     }
+
+
+    #[Route('/api/pacientes/{id}', methods:['DELETE'])]
+    public function excluirPaciente(int $id)
+    {
+        $paciente = $this->service->excluirPaciente($id);
+
+        if($paciente){
+            return new JsonResponse( ['mensagem' => "Paciente excluido com sucesso."], 200);
+        }
+    }
 }

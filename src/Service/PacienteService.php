@@ -47,6 +47,16 @@ class PacienteService
 
     }
 
+    public function excluirPaciente(int $id): Paciente
+    {
+        $paciente = $this->buscarPaciente($id);
+
+        $this->entityManagerInterface->remove($paciente);
+        $this->entityManagerInterface->flush();
+        
+        return $paciente;
+    }
+
 
 
 
