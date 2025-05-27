@@ -16,7 +16,7 @@ class PacienteController extends AbstractController
 
     #[Route('/api/pacientes', methods: ['GET'])]
     public function index(): JsonResponse
-    {
+    {   
         return new JsonResponse($this->service->listarPacientes());
     }
 
@@ -44,7 +44,7 @@ class PacienteController extends AbstractController
         $paciente = $this->service->excluirPaciente($id);
 
         if($paciente){
-            return new JsonResponse( ['mensagem' => "Paciente {$paciente->getNome()}excluido com sucesso."], 200);
+            return new JsonResponse( ['mensagem' => "Paciente {$paciente->getNome()} excluido com sucesso."], 200);
         }
     }
 }
