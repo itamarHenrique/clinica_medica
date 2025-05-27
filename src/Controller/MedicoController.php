@@ -40,12 +40,12 @@ final class MedicoController extends AbstractController
     }
 
     #[Route('/api/medico/{id}', methods:['DELETE'])]
-    public function exluirMedico(int $id): JsonResponse
+    public function excluirMedico(int $id)
     {
         $medico = $this->medicoService->removerMedico($id);
 
         if($medico){
-            return JsonResponse(['message' => "O medico {$medico->getNome()} foi excluido com sucesso."], 200);
+            return new JsonResponse(['message' => "O médico {$medico->getNome()} foi excluído com sucesso."], 200);
         }
     }
 }
