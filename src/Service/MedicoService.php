@@ -19,7 +19,16 @@ class MedicoService
 
     public function listarMedicos(): array
     {
-        return $this->entityManagerInterface->getRepository(Medico::class)->findAll();
+        $medicos = $this->entityManagerInterface->getRepository(Medico::class)->findAll();
+
+        return array_map(function($medico){
+            return [
+                'id' => $medico->getId(),
+                'nome' => $medico->getNome(),
+                'crm' => $medico->getCrm(),
+                'telefone' => $medico->getTelefone()
+            ];
+        }, $medicos);
     }
 
     public function criarMedico(array $dados): Medico
@@ -40,7 +49,7 @@ class MedicoService
         $medico = $this->medicoRepository->find($id);
 
         if(!$medico){
-            throw new NotFoundHttpException("Paciente com o ID `${id}` não foi encontrado.");
+            throw new NotFoundHttpException("Medico com o ID {$id} não foi encontrado.");
         }
 
         return $medico;
