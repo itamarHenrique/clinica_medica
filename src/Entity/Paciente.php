@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PacienteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PacienteRepository::class)]
@@ -24,6 +26,17 @@ class Paciente
 
     #[ORM\Column(length: 30)]
     private ?string $cpf = null;
+
+    /**
+     * @var Collection<int, Consulta>
+     */
+    #[ORM\OneToMany(targetEntity: Consulta::class, mappedBy: 'paciente')]
+    private Collection $consultas;
+
+    public function __construct()
+    {
+        $this->consultas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +87,36 @@ class Paciente
     public function setDataNascimento(\DateTimeInterface $dataNascimento): static
     {
         $this->dataNascimento = $dataNascimento;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Consulta>
+     */
+    public function getConsultas(): Collection
+    {
+        return $this->consultas;
+    }
+
+    public function addConsulta(Consulta $consulta): static
+    {
+        if (!$this->consultas->contains($consulta)) {
+            $this->consultas->add($consulta);
+            $consulta->setPaciente($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsulta(Consulta $consulta): static
+    {
+        if ($this->consultas->removeElement($consulta)) {
+            // set the owning side to null (unless already changed)
+            if ($consulta->getPaciente() === $this) {
+                $consulta->setPaciente(null);
+            }
+        }
 
         return $this;
     }
