@@ -29,7 +29,7 @@ class ConsultaService{
         }, $consultas);
     }
 
-    public function criarConsulta(int $pacienteId, int $medicoId, \DateTimeInterface $data, \DateTimeInterface $horario): Consulta
+    public function criarConsulta (int $pacienteId, int $medicoId, \DateTimeInterface $data, \DateTimeInterface $horario): Consulta
     {
         $paciente = $this->entityManagerInterface->getRepository(Paciente::class)->find($pacienteId);
         $medico = $this->entityManagerInterface->getRepository(Medico::class)->find($medicoId);
@@ -54,7 +54,6 @@ class ConsultaService{
         $consulta->setPaciente($paciente);
         $consulta->setHorario($horario);
         $consulta->setData($data);
-        $consulta->setMedico($medico);
         $consulta->setStatus('agendada');
         $consulta->setCriadoEm(new \DateTime());
         $consulta ->setAtualizadoEm(new \DateTime());
@@ -63,5 +62,45 @@ class ConsultaService{
         $this->entityManagerInterface->flush();
 
         return $consulta;
+    }
+
+    public function editarConsulta(int $consultaId, int $pacientId, int $medicoId, \DateTimeInterface $data, \DateTimeInterface $horario): Consulta
+    {
+        $consulta = $this->entityManagerInterface->getRepository(Consulta::class)->find($consultaId);
+
+        if(!$consulta){
+            throw new \InvalidArgumentException("Consulta não encontrada");
+        }
+
+        $paciente = $this->entityManagerInterface->getRepository(Paciente::class)->find($pacientId);
+        $medico = $this->entityManagerInterface->getRepository(Medico::class)->find($medicoId);
+    
+        
+        if(!$paciente){
+            throw new \InvalidArgumentException("Paciente não encontrado!");
+        } elseif(!$medico){
+            throw new \InvalidArgumentException("Medico não encontrado!");
+        }
+
+        $conflito = $this->entityManagerInterface->getRepository(Consulta::class)->findOneBy([
+            'data' => $data,
+            'horario' => $horario,
+            'medico' => $medico
+        ]);
+    
+        if($conflito){
+            throw new \Exception('Ja existe outra consulta para esse médico nesse horario.');
+        }
+
+        $consulta->setPaciente($paciente);
+        $consulta->setMedico($medico);
+        $consulta->setHorario($horario);
+        $consulta->setAtualizadoEm(new \DateTime());
+        $consulta->setData($data);
+    
+        $this->entityManagerInterface->flush();
+
+        return $consulta;
+    
     }
 }
