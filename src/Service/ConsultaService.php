@@ -103,4 +103,16 @@ class ConsultaService{
         return $consulta;
     
     }
+
+    public function removerConsulta(int $consultaId): void
+    {
+        $consulta = $this->entityManagerInterface->getRepository(Consulta::class)->find($consultaId);
+
+        if(!$consulta){
+            throw new \InvalidArgumentException("Consulta não encontrada");
+        }
+
+        $this->entityManagerInterface->remove($consulta);
+        $this->entityManagerInterface->flush();
+    }
 }
