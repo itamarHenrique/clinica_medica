@@ -29,6 +29,15 @@ class ConsultaService{
         }, $consultas);
     }
 
+    public function buscarConsulta(int $id)
+    {
+        $consulta = $this->consultaRepository->find($id);
+
+        if(!$consulta){
+            throw new NotFoundHttpException("Consulta com o ID {$id} não foi encontrado");
+        }
+    }
+
     public function criarConsulta (int $pacienteId, int $medicoId, \DateTimeInterface $data, \DateTimeInterface $horario): Consulta
     {
         $paciente = $this->entityManagerInterface->getRepository(Paciente::class)->find($pacienteId);
